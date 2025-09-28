@@ -4,10 +4,19 @@ import AlertDialog from "./Alert"
 
 type RowItemProps = {
   row: Row
+  highlighted: Set<number>
   onRemove: (rowId: number) => void
+  onHighlight: (cell: Cell) => void
+  onClearHighlight: () => void
 }
 
-const RowItem = ({ row, onRemove }: RowItemProps) => {
+const RowItem = ({
+  row,
+  highlighted,
+  onRemove,
+  onHighlight,
+  onClearHighlight,
+}: RowItemProps) => {
   const [confirmOpen, setConfirmOpen] = useState(false)
   const rowSum = row.cells.reduce((acc, c) => acc + c.amount, 0)
 
@@ -25,11 +34,14 @@ const RowItem = ({ row, onRemove }: RowItemProps) => {
       {row.cells.map((cell: Cell) => (
         <td
           key={cell.id}
+          onMouseEnter={() => onHighlight(cell)}
+          onMouseLeave={() => onClearHighlight()}
           style={{
             border: "1px solid #ccc",
             padding: ".5rem",
             textAlign: "right",
           }}
+          className={highlighted.has(cell.id) ? "nearest" : undefined}
         >
           {cell.amount}
         </td>
@@ -46,12 +58,11 @@ const RowItem = ({ row, onRemove }: RowItemProps) => {
         {rowSum}
       </td>
 
-      <AlertDialog 
+      <AlertDialog
         open={confirmOpen}
         onConfirm={() => {
           setConfirmOpen(false)
           onRemove(row.rowId)
-          console.log(row.rowId)
         }}
         onCancel={() => setConfirmOpen(false)}
       />

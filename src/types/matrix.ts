@@ -25,3 +25,5 @@ export type MatrixState = {
   nearestAmount: number
   matrix: Row[]
 }
+
+export type Distance = { id: number; diff: number }
