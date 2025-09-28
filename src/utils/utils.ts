@@ -13,3 +13,10 @@ export function createMatrix(M: number, N: number): Cell[][] {
     })
   )
 }
+
+export function clamp(val: number, min: number, max: number) {
+  return Math.min(Math.max(val, min), max)
+}
+
+export const calcMaxNearestAmount = (rows: number, columns: number) =>
+  Math.max(0, rows * columns - 1)

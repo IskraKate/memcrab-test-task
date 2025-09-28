@@ -1,11 +1,11 @@
 import Table from "./components/Table"
-import UserInputs from "./components/UserInputs"
+import Settings from "./components/Settings"
 import { MatrixProvider } from "./context/MatrixProvider"
 
 function App() {
   return (
     <MatrixProvider>
-      <UserInputs />
+      <Settings />
       <Table />
     </MatrixProvider>
   )

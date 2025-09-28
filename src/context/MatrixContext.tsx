@@ -1,9 +1,11 @@
 import { createContext } from "react"
-import type { MatrixAction, MatrixState } from "../types/matrix"
+import type { MatrixState } from "../types/matrix"
 
 type MatrixCtx = {
   state: MatrixState
-  dispatch: React.Dispatch<MatrixAction>
+  setRows: (rows: number) => void
+  setColumns: (columns: number) => void
+  setNearestAmount: (nearestAmount: number) => void
 }
 
 export const MatrixContext = createContext<MatrixCtx | null>(null)

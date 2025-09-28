@@ -1,36 +1,45 @@
 import { useReducer } from "react"
 import type { MatrixAction, MatrixState } from "../types/matrix"
 import { MatrixContext } from "./MatrixContext"
-import { createMatrix } from "../utils/utils"
+import { calcMaxNearestAmount, clamp, createMatrix } from "../utils/utils"
 
 function matrixReducer(state: MatrixState, action: MatrixAction): MatrixState {
   switch (action.type) {
     case "SET_ROWS": {
-      const { rows } = action
+      const rows = clamp(action.rows, 0, 100)
+      const columns = state.columns
+
+      const maxNearestAmount = calcMaxNearestAmount(rows, columns)
+
       return {
         ...state,
         rows,
-        nearestAmount: Math.min(state.nearestAmount, rows * state.columns - 1),
-        matrix: createMatrix(rows, state.columns),
+        nearestAmount: clamp(state.nearestAmount, 0, maxNearestAmount),
+        matrix: createMatrix(rows, columns),
       }
     }
     case "SET_COLUMNS": {
-      const { columns } = action
+      const columns = clamp(action.columns, 0, 100)
+      const rows = state.rows
+
+      const maxNearestAmount = calcMaxNearestAmount(rows, columns)
+
       return {
         ...state,
         columns,
-        nearestAmount: Math.min(state.nearestAmount, state.rows * columns - 1),
-        matrix: createMatrix(state.rows, columns),
+        nearestAmount: clamp(state.nearestAmount, 0, maxNearestAmount),
+        matrix: createMatrix(rows, columns),
       }
     }
-    case "SET_NEAREST_AMOUNT":
+
+    case "SET_NEAREST_AMOUNT": {
+      const maxNearestAmount = calcMaxNearestAmount(state.rows, state.columns)
+
       return {
         ...state,
-        nearestAmount: Math.min(
-          action.nearestAmount,
-          state.rows * state.columns - 1
-        ),
+        nearestAmount: clamp(action.nearestAmount, 0, maxNearestAmount),
       }
+    }
 
     default:
       return state
@@ -45,8 +54,16 @@ export function MatrixProvider({ children }: { children: React.ReactNode }) {
     matrix: [],
   })
 
+  const setRows = (rows: number) => dispatch({ type: "SET_ROWS", rows })
+  const setColumns = (columns: number) =>
+    dispatch({ type: "SET_COLUMNS", columns })
+  const setNearestAmount = (nearestAmount: number) =>
+    dispatch({ type: "SET_NEAREST_AMOUNT", nearestAmount })
+
   return (
-    <MatrixContext.Provider value={{ state, dispatch }}>
+    <MatrixContext.Provider
+      value={{ state, setRows, setColumns, setNearestAmount }}
+    >
       {children}
     </MatrixContext.Provider>
   )
