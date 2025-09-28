@@ -15,7 +15,7 @@ function matrixReducer(state: MatrixState, action: MatrixAction): MatrixState {
         matrix: createMatrix(rows, columns),
       }
     }
-    case "SET_NEATEST_AMOUNT":
+    case "SET_NEAREST_AMOUNT":
       return {
         ...state,
         nearestAmount: Math.min(

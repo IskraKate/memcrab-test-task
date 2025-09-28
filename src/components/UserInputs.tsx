@@ -51,7 +51,7 @@ const UserInputs = () => {
         value={nearestAmount}
         onChange={(e) =>
           dispatch({
-            type: "SET_NEATEST_AMOUNT",
+            type: "SET_NEAREST_AMOUNT",
             nearestAmount: Number(e.target.value),
           })
         }
