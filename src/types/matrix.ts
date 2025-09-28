@@ -6,7 +6,12 @@ export type Cell = {
   amount: CellValue
 }
 
-export type Matrix = Cell[][]
+export type Row = {
+  rowId: number
+  cells: Cell[]
+}
+
+export type Matrix = Row[]
 
 export type MatrixAction =
   | { type: "SET_ROWS"; rows: number }
@@ -17,5 +22,5 @@ export type MatrixState = {
   rows: number
   columns: number
   nearestAmount: number
-  matrix: Cell[][]
+  matrix: Row[]
 }

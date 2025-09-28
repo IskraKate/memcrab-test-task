@@ -1,17 +1,21 @@
-import type { Cell } from "../types/matrix"
+import type { Row, Cell } from "../types/matrix"
 
-export function createMatrix(M: number, N: number): Cell[][] {
+export function createMatrix(rows: number, columns: number): Row[] {
   let idCounter = 1
 
-  return Array.from({ length: M }, () =>
-    Array.from({ length: N }, () => {
-      const cell: Cell = {
+  return Array.from({ length: rows }).map((_, rowIndex) => {
+    const cells: Cell[] = Array.from({ length: columns }).map(() => {
+      return {
         id: idCounter++,
         amount: Math.floor(Math.random() * 900) + 100,
       }
-      return cell
     })
-  )
+
+    return {
+      rowId: rowIndex + 1,
+      cells,
+    }
+  })
 }
 
 export function clamp(val: number, min: number, max: number) {
