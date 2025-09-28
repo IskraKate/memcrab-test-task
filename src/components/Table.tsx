@@ -1,10 +1,10 @@
-import { createMatrix } from "../utils/utils"
+import { useMatrix } from "../hooks/useMatrix"
 
 const Table = () => {
-  const array = createMatrix(2, 10)
+  const { matrix } = useMatrix()
   return (
     <div>
-      {array.map((row) => (
+      {matrix.map((row) => (
         <p>
           {row.map((col) => (
             <span>{` ${col.amount}`}</span>
