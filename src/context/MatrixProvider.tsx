@@ -5,14 +5,22 @@ import { createMatrix } from "../utils/utils"
 
 function matrixReducer(state: MatrixState, action: MatrixAction): MatrixState {
   switch (action.type) {
-    case "SET_DIMENSIONS": {
-      const { rows, columns } = action
+    case "SET_ROWS": {
+      const { rows } = action
       return {
         ...state,
         rows,
+        nearestAmount: Math.min(state.nearestAmount, rows * state.columns - 1),
+        matrix: createMatrix(rows, state.columns),
+      }
+    }
+    case "SET_COLUMNS": {
+      const { columns } = action
+      return {
+        ...state,
         columns,
-        nearestAmount: Math.min(state.nearestAmount, rows * columns - 1),
-        matrix: createMatrix(rows, columns),
+        nearestAmount: Math.min(state.nearestAmount, state.rows * columns - 1),
+        matrix: createMatrix(state.rows, columns),
       }
     }
     case "SET_NEAREST_AMOUNT":

@@ -17,9 +17,8 @@ const UserInputs = () => {
         value={rows}
         onChange={(e) =>
           dispatch({
-            type: "SET_DIMENSIONS",
+            type: "SET_ROWS",
             rows: Number(e.target.value),
-            columns: state.columns,
           })
         }
       />
@@ -34,8 +33,7 @@ const UserInputs = () => {
         value={columns}
         onChange={(e) =>
           dispatch({
-            type: "SET_DIMENSIONS",
-            rows: state.rows,
+            type: "SET_COLUMNS",
             columns: Number(e.target.value),
           })
         }
