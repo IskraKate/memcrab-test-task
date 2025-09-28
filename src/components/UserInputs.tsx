@@ -1,14 +1,8 @@
 import { useMatrix } from "../hooks/useMatrix"
 
 const UserInputs = () => {
-  const {
-    rows,
-    setRows,
-    columns,
-    setColumns,
-    nearestAmount,
-    setNearestAmount,
-  } = useMatrix()
+  const { state, dispatch } = useMatrix()
+  const { rows, columns, nearestAmount } = state
   const maxNearestAmount = rows * columns - 1
 
   return (
@@ -21,7 +15,13 @@ const UserInputs = () => {
         min={0}
         max={100}
         value={rows}
-        onChange={(e) => setRows(Number(e.target.value))}
+        onChange={(e) =>
+          dispatch({
+            type: "SET_DIMENSIONS",
+            rows: Number(e.target.value),
+            columns: state.columns,
+          })
+        }
       />
 
       <label htmlFor="columns">Columns:</label>
@@ -32,7 +32,13 @@ const UserInputs = () => {
         min={0}
         max={100}
         value={columns}
-        onChange={(e) => setColumns(Number(e.target.value))}
+        onChange={(e) =>
+          dispatch({
+            type: "SET_DIMENSIONS",
+            rows: state.rows,
+            columns: Number(e.target.value),
+          })
+        }
       />
 
       <label htmlFor="nearest">Nearest cells:</label>
@@ -43,7 +49,12 @@ const UserInputs = () => {
         min={0}
         max={maxNearestAmount}
         value={nearestAmount}
-        onChange={(e) => setNearestAmount(Number(e.target.value))}
+        onChange={(e) =>
+          dispatch({
+            type: "SET_NEATEST_AMOUNT",
+            nearestAmount: Number(e.target.value),
+          })
+        }
       />
     </div>
   )

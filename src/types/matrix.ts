@@ -7,3 +7,14 @@ export type Cell = {
 }
 
 export type Matrix = Cell[][]
+
+export type MatrixAction =
+  | { type: "SET_DIMENSIONS"; rows: number; columns: number }
+  | { type: "SET_NEATEST_AMOUNT"; nearestAmount: number }
+
+export type MatrixState = {
+  rows: number
+  columns: number
+  nearestAmount: number
+  matrix: Cell[][]
+}

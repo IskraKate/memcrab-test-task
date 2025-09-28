@@ -1,10 +1,10 @@
 import { useMatrix } from "../hooks/useMatrix"
 
 const Table = () => {
-  const { matrix } = useMatrix()
+  const { state } = useMatrix()
   return (
     <div>
-      {matrix.map((row) => (
+      {state.matrix.map((row) => (
         <p>
           {row.map((col) => (
             <span>{` ${col.amount}`}</span>
