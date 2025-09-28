@@ -2,7 +2,7 @@ import { useMatrix } from "../hooks/useMatrix"
 import Row from "./RowItem"
 
 const Table = () => {
-  const { state } = useMatrix()
+  const { state, deleteRow } = useMatrix()
   const matrix = state?.matrix ?? []
 
   if (!Array.isArray(matrix) || matrix.length === 0) {
@@ -15,7 +15,11 @@ const Table = () => {
     >
       <tbody>
         {matrix.map((row) => (
-          <Row key={row.rowId} row={row} />
+          <Row
+            key={row.rowId}
+            row={row}
+            onRemove={(rowId) => deleteRow(rowId)}
+          />
         ))}
       </tbody>
     </table>

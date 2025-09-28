@@ -41,6 +41,20 @@ function matrixReducer(state: MatrixState, action: MatrixAction): MatrixState {
       }
     }
 
+    case "DELETE_ROW": {
+      const rowId = action.id
+      const newMatrix = state.matrix.filter((r) => r.rowId !== rowId)
+      const rows = newMatrix.length
+      const maxNearestAmount = calcMaxNearestAmount(rows, state.columns)
+
+      return {
+        ...state,
+        rows,
+        matrix: newMatrix,
+        nearestAmount: clamp(state.nearestAmount, 0, maxNearestAmount),
+      }
+    }
+
     default:
       return state
   }
@@ -59,10 +73,11 @@ export function MatrixProvider({ children }: { children: React.ReactNode }) {
     dispatch({ type: "SET_COLUMNS", columns })
   const setNearestAmount = (nearestAmount: number) =>
     dispatch({ type: "SET_NEAREST_AMOUNT", nearestAmount })
+  const deleteRow = (id: number) => dispatch({ type: "DELETE_ROW", id })
 
   return (
     <MatrixContext.Provider
-      value={{ state, setRows, setColumns, setNearestAmount }}
+      value={{ state, setRows, setColumns, setNearestAmount, deleteRow }}
     >
       {children}
     </MatrixContext.Provider>

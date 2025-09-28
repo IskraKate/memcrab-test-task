@@ -17,6 +17,7 @@ export type MatrixAction =
   | { type: "SET_ROWS"; rows: number }
   | { type: "SET_COLUMNS"; columns: number }
   | { type: "SET_NEAREST_AMOUNT"; nearestAmount: number }
+  | { type: "DELETE_ROW"; id: number }
 
 export type MatrixState = {
   rows: number
