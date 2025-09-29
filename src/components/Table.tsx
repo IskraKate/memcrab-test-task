@@ -23,7 +23,7 @@ const Table = () => {
   const clearHighlight = useCallback(() => setHighlighted(new Set()), [])
 
   if (!Array.isArray(matrix) || matrix.length === 0) {
-    return <p>No data</p>
+    return <p>No data. The rows and columns should be greater than 0.</p>
   }
 
   return (

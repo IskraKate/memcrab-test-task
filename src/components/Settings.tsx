@@ -12,27 +12,29 @@ const Settings = () => {
       <legend>Settings</legend>
 
       <NumberField
-        label="Rows: "
+        label="Please enter rows: "
         value={rows}
         onChange={setRows}
         helpText="Number of table rows (from 0 to 100)"
       />
 
       <NumberField
-        label="Columns: "
+        label="Please enter columns: "
         value={columns}
         onChange={setColumns}
         helpText="Number of table columns (from 0 to 100)"
       />
 
       <NumberField
-        label="Nearest cells amount: "
+        label="Please enter nearest cells (how much cells with nearest values should be highlighted): "
         value={nearestAmount}
         onChange={setNearestAmount}
         max={maxNearest}
         disabled={maxNearest === 0}
         helpText={`Max X: ${maxNearest}${
-          maxNearest === 0 ? " (no cells available)" : ""
+          maxNearest === 0
+            ? " (no cells available, columns and rows should be greater than 0)"
+            : ""
         }`}
       />
     </fieldset>

@@ -6,6 +6,7 @@ function App() {
   return (
     <MatrixProvider>
       <div className="container">
+        <h1>Interactive Matrix Builder & Analyzer</h1>
         <Settings />
         <Table />
       </div>

@@ -30,7 +30,7 @@ const RowItem = ({
   return (
     <tr>
       <td>
-        <button onClick={() => setConfirmOpen(true)}>
+        <button title="Remove the row" onClick={() => setConfirmOpen(true)}>
           <img src={trashIcon} width={30} alt="Remove row" />
         </button>
       </td>
