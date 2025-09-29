@@ -21,6 +21,7 @@ const RowItem = ({
 }: RowItemProps) => {
   const { deleteRow, incrementCell } = useMatrix()
   const [confirmOpen, setConfirmOpen] = useState(false)
+  const [showPercents, setShowPercents] = useState(false)
   const rowRef = useRef<HTMLTableRowElement>(null)
 
   const cells = row.cells
@@ -42,7 +43,7 @@ const RowItem = ({
         return (
           <td
             key={cell.id}
-            data-cell="1"
+            data-cell="initial-data"
             onMouseEnter={() => onHighlight(cell)}
             onMouseLeave={onClearHighlight}
             onClick={() => incrementCell(cell.id)}
@@ -50,14 +51,15 @@ const RowItem = ({
               highlighted.has(cell.id) ? styles.nearest : ""
             }`}
           >
-            {`${percentOfSum.toFixed(0)}%`}
+            {showPercents ? `${percentOfSum.toFixed(0)}%` : cell.amount}
           </td>
         )
       })}
 
       <td
         key={`${row.rowId}-sum`}
-        onMouseEnter={() =>
+        onMouseEnter={() => {
+          setShowPercents(true)
           applyPercentBg(
             rowRef.current,
             cells,
@@ -65,8 +67,9 @@ const RowItem = ({
             true,
             styles["percent-bg"]
           )
-        }
-        onMouseLeave={() =>
+        }}
+        onMouseLeave={() => {
+          setShowPercents(false)
           applyPercentBg(
             rowRef.current,
             cells,
@@ -74,7 +77,7 @@ const RowItem = ({
             false,
             styles["percent-bg"]
           )
-        }
+        }}
       >
         {rowSum}
       </td>

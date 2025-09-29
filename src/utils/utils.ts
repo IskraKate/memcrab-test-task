@@ -171,7 +171,7 @@ export function applyPercentBg(
   if (!tr) return
 
   const tds = Array.from<HTMLTableCellElement>(
-    tr.querySelectorAll<HTMLTableCellElement>('td[data-cell="1"]')
+    tr.querySelectorAll<HTMLTableCellElement>('td[data-cell="initial-data"]')
   )
 
   tds.forEach((td, idx) => {
