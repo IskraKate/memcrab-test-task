@@ -17,7 +17,3 @@
     transparent var(--fill, 0%)
   );
 }
-
-.percent-bg[data-fill] {
-  --cell-fill: attr(data-fill);
-}

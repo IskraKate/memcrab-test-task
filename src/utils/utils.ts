@@ -160,3 +160,30 @@ export function colPercentile(
 }
 
 export const nf = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 })
+
+export function applyPercentBg(
+  tr: HTMLTableRowElement | null,
+  cells: { amount: number }[],
+  maxInRow: number,
+  enable: boolean,
+  className: string
+) {
+  if (!tr) return
+
+  const tds = Array.from<HTMLTableCellElement>(
+    tr.querySelectorAll<HTMLTableCellElement>('td[data-cell="1"]')
+  )
+
+  tds.forEach((td, idx) => {
+    const amt = cells[idx].amount
+    const p = maxInRow > 0 ? (amt / maxInRow) * 100 : 0
+
+    if (enable) {
+      td.style.setProperty("--fill", `${Math.round(p)}%`)
+      td.classList.add(className)
+    } else {
+      td.classList.remove(className)
+      td.style.removeProperty("--fill")
+    }
+  })
+}

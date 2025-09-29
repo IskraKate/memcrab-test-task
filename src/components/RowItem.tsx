@@ -1,9 +1,10 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import type { Cell, Row } from "../types/matrix"
 import AlertDialog from "./Alert"
 import { useMatrix } from "../hooks/useMatrix"
 import trashIcon from "../assets/trash.svg"
 import styles from "./RowItem.module.css"
+import { applyPercentBg } from "../utils/utils"
 
 type RowItemProps = {
   row: Row
@@ -20,7 +21,7 @@ const RowItem = ({
 }: RowItemProps) => {
   const { deleteRow, incrementCell } = useMatrix()
   const [confirmOpen, setConfirmOpen] = useState(false)
-  const [showPercents, setShowPercents] = useState(false)
+  const rowRef = useRef<HTMLTableRowElement>(null)
 
   const cells = row.cells
   const values = cells.map((c) => c.amount)
@@ -28,35 +29,52 @@ const RowItem = ({
   const maxInRow = values.length ? Math.max(...values) : 0
 
   return (
-    <tr>
+    <tr ref={rowRef}>
       <td>
         <button title="Remove the row" onClick={() => setConfirmOpen(true)}>
           <img src={trashIcon} width={30} alt="Remove row" />
         </button>
       </td>
-      {cells.map((cell: Cell) => {
+
+      {cells.map((cell) => {
         const percentOfSum = rowSum > 0 ? (cell.amount / rowSum) * 100 : 0
-        const percentOfMax = maxInRow > 0 ? (cell.amount / maxInRow) * 100 : 0
 
         return (
           <td
             key={cell.id}
+            data-cell="1"
             onMouseEnter={() => onHighlight(cell)}
             onMouseLeave={onClearHighlight}
             onClick={() => incrementCell(cell.id)}
-            data-fill={`${percentOfMax}%`}
             className={`${styles["data-cell"]} ${
-              showPercents ? styles["percent-bg"] : ""
-            }  ${highlighted.has(cell.id) ? styles.nearest : ""}`}
+              highlighted.has(cell.id) ? styles.nearest : ""
+            }`}
           >
-            {showPercents ? `${percentOfSum.toFixed(0)}%` : cell.amount}
+            {`${percentOfSum.toFixed(0)}%`}
           </td>
         )
       })}
+
       <td
         key={`${row.rowId}-sum`}
-        onMouseEnter={() => setShowPercents(true)}
-        onMouseLeave={() => setShowPercents(false)}
+        onMouseEnter={() =>
+          applyPercentBg(
+            rowRef.current,
+            cells,
+            maxInRow,
+            true,
+            styles["percent-bg"]
+          )
+        }
+        onMouseLeave={() =>
+          applyPercentBg(
+            rowRef.current,
+            cells,
+            maxInRow,
+            false,
+            styles["percent-bg"]
+          )
+        }
       >
         {rowSum}
       </td>
