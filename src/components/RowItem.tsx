@@ -2,6 +2,8 @@ import { useState } from "react"
 import type { Cell, Row } from "../types/matrix"
 import AlertDialog from "./Alert"
 import { useMatrix } from "../hooks/useMatrix"
+import trashIcon from "../assets/trash.svg"
+import styles from "./RowItem.module.css"
 
 type RowItemProps = {
   row: Row
@@ -27,14 +29,10 @@ const RowItem = ({
 
   return (
     <tr>
-      <td
-        style={{
-          border: "1px solid #ccc",
-          padding: ".5rem",
-          textAlign: "right",
-        }}
-      >
-        <button onClick={() => setConfirmOpen(true)}>-</button>
+      <td>
+        <button onClick={() => setConfirmOpen(true)}>
+          <img src={trashIcon} width={30} alt="Remove row" />
+        </button>
       </td>
       {cells.map((cell: Cell) => {
         const percentOfSum = rowSum > 0 ? (cell.amount / rowSum) * 100 : 0
@@ -47,16 +45,13 @@ const RowItem = ({
             onMouseLeave={onClearHighlight}
             onClick={() => incrementCell(cell.id)}
             style={{
-              border: "1px solid #ccc",
-              padding: ".5rem",
-              textAlign: "right",
-              cursor: "pointer",
               background: showPercents
                 ? `linear-gradient(to right, var(--accent, #cde) ${percentOfMax}%, transparent ${percentOfMax}%)`
                 : undefined,
-              backgroundRepeat: "no-repeat",
             }}
-            className={highlighted.has(cell.id) ? "nearest" : ""}
+            className={`${styles["data-cell"]} ${
+              highlighted.has(cell.id) ? styles.nearest : ""
+            }`}
           >
             {showPercents ? `${percentOfSum.toFixed(0)}%` : cell.amount}
           </td>
@@ -64,12 +59,6 @@ const RowItem = ({
       })}
       <td
         key={`${row.rowId}-sum`}
-        style={{
-          border: "1px solid #ccc",
-          padding: ".5rem",
-          textAlign: "right",
-          fontWeight: "bold",
-        }}
         onMouseEnter={() => setShowPercents(true)}
         onMouseLeave={() => setShowPercents(false)}
       >

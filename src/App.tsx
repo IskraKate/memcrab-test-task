@@ -5,8 +5,10 @@ import { MatrixProvider } from "./context/MatrixProvider"
 function App() {
   return (
     <MatrixProvider>
-      <Settings />
-      <Table />
+      <div className="container">
+        <Settings />
+        <Table />
+      </div>
     </MatrixProvider>
   )
 }

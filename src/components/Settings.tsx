@@ -15,14 +15,14 @@ const Settings = () => {
         label="Rows: "
         value={rows}
         onChange={setRows}
-        helpText="Number of table rows"
+        helpText="Number of table rows (from 0 to 100)"
       />
 
       <NumberField
         label="Columns: "
         value={columns}
         onChange={setColumns}
-        helpText="Number of table columns"
+        helpText="Number of table columns (from 0 to 100)"
       />
 
       <NumberField

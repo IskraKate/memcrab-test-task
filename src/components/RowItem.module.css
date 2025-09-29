@@ -1,0 +1,11 @@
+.nearest {
+  background: color-mix(in oklab, var(--accent) 28%, transparent);
+  outline: 1px solid var(--accent);
+  outline-offset: -1px;
+  transition: background 120ms ease, outline-color 120ms ease;
+}
+
+.data-cell {
+  cursor: pointer;
+  background-repeat: no-repeat;
+}

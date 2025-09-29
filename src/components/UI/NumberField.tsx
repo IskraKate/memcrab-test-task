@@ -1,4 +1,5 @@
 import { useId } from "react"
+import styles from "./NumberField.module.css"
 
 type NumberFieldProps = {
   label: string
@@ -27,7 +28,7 @@ const NumberField = ({
   const helpId = helpText ? `${inputId}-help` : undefined
 
   return (
-    <div>
+    <div className={styles.container}>
       <label htmlFor={inputId}>{label}</label>
       <input
         id={inputId}

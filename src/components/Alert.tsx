@@ -1,4 +1,5 @@
 import Modal from "./UI/Modal"
+import styles from "./Alert.module.css"
 
 type AlertDialogProps = {
   open: boolean
@@ -8,15 +9,13 @@ type AlertDialogProps = {
 
 const AlertDialog = ({ open, onConfirm, onCancel }: AlertDialogProps) => {
   return (
-    <Modal open={open} className="alert-dialog">
-      <div style={{ padding: "1rem", minWidth: "280px" }}>
-        <h3>Are you sure?</h3>
+    <Modal open={open} className={styles["alert-dialog"]}>
+      <div className={styles.content}>
+        <h3>Are you sure you want to delete the row?</h3>
         <p>Confirm action</p>
-        <div
-          style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem" }}
-        >
-          <button onClick={onConfirm}>Yes</button>
+        <div className={styles.actions}>
           <button onClick={onCancel}>Cancel</button>
+          <button onClick={onConfirm}>Yes</button>
         </div>
       </div>
     </Modal>

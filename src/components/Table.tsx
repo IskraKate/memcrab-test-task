@@ -3,6 +3,7 @@ import { useMatrix } from "../hooks/useMatrix"
 import type { Cell } from "../types/matrix"
 import { colPercentile, nearestCellIds, nf } from "../utils/utils"
 import Row from "./RowItem"
+import styles from "./Table.module.css"
 
 const Table = () => {
   const { state, addRow } = useMatrix()
@@ -27,57 +28,41 @@ const Table = () => {
 
   return (
     <>
-      <div style={{ marginBottom: 12 }}>
-        <button
-          type="button"
-          onClick={addRow}
-          disabled={columns === 0}
-          title={columns === 0 ? "Add columns first" : "Add a new row"}
-        >
-          Add row
-        </button>
-      </div>
-      <table
-        style={{ borderCollapse: "collapse", marginTop: "1rem", minWidth: 480 }}
+      <button
+        type="button"
+        onClick={addRow}
+        disabled={columns === 0}
+        title={columns === 0 ? "Add columns first" : "Add a new row"}
+        className={styles["add-button"]}
       >
-        <tbody>
-          {matrix.map((row) => (
-            <Row
-              key={row.rowId}
-              row={row}
-              highlighted={highlighted}
-              onHighlight={(cell: Cell) => handleHighlight(cell)}
-              onClearHighlight={clearHighlight}
-            />
-          ))}
-        </tbody>
-
-        <tfoot>
-          <tr>
-            <td
-              style={{
-                padding: ".5rem",
-                textAlign: "right",
-                fontStyle: "italic",
-              }}
-            >
-              60th percentile
-            </td>
-            {percentileResults.map((val, i) => (
-              <td
-                key={`p60-${i}`}
-                style={{
-                  padding: ".5rem",
-                  textAlign: "right",
-                }}
-                title="60th percentile"
-              >
-                {nf.format(val)}
-              </td>
+        + Add row
+      </button>
+      <div className={styles["matrix-scroll"]}>
+        <table className={styles.matrix}>
+          <tbody>
+            {matrix.map((row) => (
+              <Row
+                key={row.rowId}
+                row={row}
+                highlighted={highlighted}
+                onHighlight={(cell: Cell) => handleHighlight(cell)}
+                onClearHighlight={clearHighlight}
+              />
             ))}
-          </tr>
-        </tfoot>
-      </table>
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <td>60th</td>
+              {percentileResults.map((val, i) => (
+                <td key={`p60-${i}`} title="60th percentile">
+                  {nf.format(val)}
+                </td>
+              ))}
+            </tr>
+          </tfoot>
+        </table>
+      </div>
     </>
   )
 }

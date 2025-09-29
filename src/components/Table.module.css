@@ -1,0 +1,14 @@
+.matrix-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.matrix {
+  border-collapse: collapse;
+  min-width: max-content;
+}
+
+.add-button {
+  width: 150px;
+  margin-left: auto;
+}
