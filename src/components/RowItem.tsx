@@ -18,7 +18,12 @@ const RowItem = ({
 }: RowItemProps) => {
   const { deleteRow, incrementCell } = useMatrix()
   const [confirmOpen, setConfirmOpen] = useState(false)
-  const rowSum = row.cells.reduce((acc, c) => acc + c.amount, 0)
+  const [showPercents, setShowPercents] = useState(false)
+
+  const cells = row.cells
+  const values = cells.map((c) => c.amount)
+  const rowSum = values.reduce((acc, c) => acc + c, 0)
+  const maxInRow = values.length ? Math.max(...values) : 0
 
   return (
     <tr>
@@ -31,23 +36,32 @@ const RowItem = ({
       >
         <button onClick={() => setConfirmOpen(true)}>-</button>
       </td>
-      {row.cells.map((cell: Cell) => (
-        <td
-          key={cell.id}
-          onMouseEnter={() => onHighlight(cell)}
-          onMouseLeave={onClearHighlight}
-          onClick={() => incrementCell(cell.id)}
-          style={{
-            border: "1px solid #ccc",
-            padding: ".5rem",
-            textAlign: "right",
-            cursor: "pointer",
-          }}
-          className={highlighted.has(cell.id) ? "nearest" : undefined}
-        >
-          {cell.amount}
-        </td>
-      ))}
+      {cells.map((cell: Cell) => {
+        const percentOfSum = rowSum > 0 ? (cell.amount / rowSum) * 100 : 0
+        const percentOfMax = maxInRow > 0 ? (cell.amount / maxInRow) * 100 : 0
+
+        return (
+          <td
+            key={cell.id}
+            onMouseEnter={() => onHighlight(cell)}
+            onMouseLeave={onClearHighlight}
+            onClick={() => incrementCell(cell.id)}
+            style={{
+              border: "1px solid #ccc",
+              padding: ".5rem",
+              textAlign: "right",
+              cursor: "pointer",
+              background: showPercents
+                ? `linear-gradient(to right, var(--accent, #cde) ${percentOfMax}%, transparent ${percentOfMax}%)`
+                : undefined,
+              backgroundRepeat: "no-repeat",
+            }}
+            className={highlighted.has(cell.id) ? "nearest" : ""}
+          >
+            {showPercents ? `${percentOfSum.toFixed(0)}%` : cell.amount}
+          </td>
+        )
+      })}
       <td
         key={`${row.rowId}-sum`}
         style={{
@@ -56,6 +70,8 @@ const RowItem = ({
           textAlign: "right",
           fontWeight: "bold",
         }}
+        onMouseEnter={() => setShowPercents(true)}
+        onMouseLeave={() => setShowPercents(false)}
       >
         {rowSum}
       </td>
