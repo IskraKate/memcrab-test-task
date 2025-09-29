@@ -19,12 +19,15 @@ export type MatrixAction =
   | { type: "SET_NEAREST_AMOUNT"; nearestAmount: number }
   | { type: "DELETE_ROW"; id: number }
   | { type: "INCREMENT_CELL"; id: number }
+  | { type: "ADD_ROW" }
 
 export type MatrixState = {
   rows: number
   columns: number
   nearestAmount: number
   matrix: Row[]
+  nextRowId: number
+  nextCellId: number
 }
 
 export type Distance = { id: number; diff: number }

@@ -1,5 +1,9 @@
 import type { Row, Cell, Distance } from "../types/matrix"
 
+export const randomAmount = () => Math.floor(Math.random() * 900) + 100
+export const countCells = (matrix: Row[]) =>
+  matrix.reduce((sum, row) => sum + row.cells.length, 0)
+
 export function createMatrix(rows: number, columns: number): Row[] {
   let idCounter = 1
 
@@ -7,7 +11,7 @@ export function createMatrix(rows: number, columns: number): Row[] {
     const cells: Cell[] = Array.from({ length: columns }).map(() => {
       return {
         id: idCounter++,
-        amount: Math.floor(Math.random() * 900) + 100,
+        amount: randomAmount(),
       }
     })
 
@@ -16,6 +20,19 @@ export function createMatrix(rows: number, columns: number): Row[] {
       cells,
     }
   })
+}
+
+export function createRow(
+  columns: number,
+  rowId: number,
+  startCellId: number
+): { row: Row; nextCellId: number } {
+  let id = startCellId
+  const cells: Cell[] = Array.from({ length: columns }, () => ({
+    id: id++,
+    amount: randomAmount(),
+  }))
+  return { row: { rowId, cells }, nextCellId: id }
 }
 
 export const clamp = (val: number, min: number, max: number) =>
