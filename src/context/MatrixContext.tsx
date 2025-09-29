@@ -7,6 +7,7 @@ type MatrixCtx = {
   setColumns: (columns: number) => void
   setNearestAmount: (nearestAmount: number) => void
   deleteRow: (id: number) => void
+  incrementCell: (id: number) => void
 }
 
 export const MatrixContext = createContext<MatrixCtx | null>(null)

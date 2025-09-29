@@ -55,6 +55,25 @@ function matrixReducer(state: MatrixState, action: MatrixAction): MatrixState {
       }
     }
 
+    case "INCREMENT_CELL": {
+      const { id } = action
+
+      return {
+        ...state,
+        matrix: state.matrix.map((row) => {
+          const cellIndex = row.cells.findIndex((c) => c.id === id)
+          if (cellIndex === -1) return row
+
+          return {
+            ...row,
+            cells: row.cells.map((cell, index) =>
+              index === cellIndex ? { ...cell, amount: cell.amount + 1 } : cell
+            ),
+          }
+        }),
+      }
+    }
+
     default:
       return state
   }
@@ -74,10 +93,18 @@ export function MatrixProvider({ children }: { children: React.ReactNode }) {
   const setNearestAmount = (nearestAmount: number) =>
     dispatch({ type: "SET_NEAREST_AMOUNT", nearestAmount })
   const deleteRow = (id: number) => dispatch({ type: "DELETE_ROW", id })
+  const incrementCell = (id: number) => dispatch({ type: "INCREMENT_CELL", id })
 
   return (
     <MatrixContext.Provider
-      value={{ state, setRows, setColumns, setNearestAmount, deleteRow }}
+      value={{
+        state,
+        setRows,
+        setColumns,
+        setNearestAmount,
+        deleteRow,
+        incrementCell,
+      }}
     >
       {children}
     </MatrixContext.Provider>

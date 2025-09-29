@@ -5,7 +5,7 @@ import { colPercentile, nearestCellIds, nf } from "../utils/utils"
 import Row from "./RowItem"
 
 const Table = () => {
-  const { state, deleteRow } = useMatrix()
+  const { state } = useMatrix()
   const { nearestAmount, matrix } = state
 
   const [highlighted, setHighlighted] = useState<Set<number>>(new Set())
@@ -35,7 +35,6 @@ const Table = () => {
             key={row.rowId}
             row={row}
             highlighted={highlighted}
-            onRemove={(rowId: number) => deleteRow(rowId)}
             onHighlight={(cell: Cell) => handleHighlight(cell)}
             onClearHighlight={clearHighlight}
           />

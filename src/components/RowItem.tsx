@@ -1,11 +1,11 @@
 import { useState } from "react"
 import type { Cell, Row } from "../types/matrix"
 import AlertDialog from "./Alert"
+import { useMatrix } from "../hooks/useMatrix"
 
 type RowItemProps = {
   row: Row
   highlighted: Set<number>
-  onRemove: (rowId: number) => void
   onHighlight: (cell: Cell) => void
   onClearHighlight: () => void
 }
@@ -13,10 +13,10 @@ type RowItemProps = {
 const RowItem = ({
   row,
   highlighted,
-  onRemove,
   onHighlight,
   onClearHighlight,
 }: RowItemProps) => {
+  const { deleteRow, incrementCell } = useMatrix()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const rowSum = row.cells.reduce((acc, c) => acc + c.amount, 0)
 
@@ -35,11 +35,13 @@ const RowItem = ({
         <td
           key={cell.id}
           onMouseEnter={() => onHighlight(cell)}
-          onMouseLeave={() => onClearHighlight()}
+          onMouseLeave={onClearHighlight}
+          onClick={() => incrementCell(cell.id)}
           style={{
             border: "1px solid #ccc",
             padding: ".5rem",
             textAlign: "right",
+            cursor: "pointer",
           }}
           className={highlighted.has(cell.id) ? "nearest" : undefined}
         >
@@ -62,7 +64,7 @@ const RowItem = ({
         open={confirmOpen}
         onConfirm={() => {
           setConfirmOpen(false)
-          onRemove(row.rowId)
+          deleteRow(row.rowId)
         }}
         onCancel={() => setConfirmOpen(false)}
       />
