@@ -9,3 +9,15 @@
   cursor: pointer;
   background-repeat: no-repeat;
 }
+
+.percent-bg {
+  background-image: linear-gradient(
+    to right,
+    var(--accent, #cde) var(--fill, 0%),
+    transparent var(--fill, 0%)
+  );
+}
+
+.percent-bg[data-fill] {
+  --cell-fill: attr(data-fill);
+}

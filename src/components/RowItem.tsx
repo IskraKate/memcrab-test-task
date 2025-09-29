@@ -44,14 +44,10 @@ const RowItem = ({
             onMouseEnter={() => onHighlight(cell)}
             onMouseLeave={onClearHighlight}
             onClick={() => incrementCell(cell.id)}
-            style={{
-              background: showPercents
-                ? `linear-gradient(to right, var(--accent, #cde) ${percentOfMax}%, transparent ${percentOfMax}%)`
-                : undefined,
-            }}
+            data-fill={`${percentOfMax}%`}
             className={`${styles["data-cell"]} ${
-              highlighted.has(cell.id) ? styles.nearest : ""
-            }`}
+              showPercents ? styles["percent-bg"] : ""
+            }  ${highlighted.has(cell.id) ? styles.nearest : ""}`}
           >
             {showPercents ? `${percentOfSum.toFixed(0)}%` : cell.amount}
           </td>
