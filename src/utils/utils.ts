@@ -74,3 +74,44 @@ export function nearestCellIds(
   distances.sort((a, b) => a.diff - b.diff || a.id - b.id)
   return new Set(distances.slice(0, count).map((x) => x.id))
 }
+
+export function colPercentile(
+  matrix: Row[],
+  percentile: number = 60
+): number[] {
+  if (matrix.length === 0) return []
+  const columnCount = matrix[0].cells.length
+  if (columnCount === 0) return []
+
+  const results: number[] = new Array(columnCount)
+  const p = percentile / 100
+
+  for (let j = 0; j < columnCount; j++) {
+    const columnValues = matrix
+      .map((row) => row.cells[j].amount)
+      .sort((a, b) => a - b)
+    const valueCount = columnValues.length
+
+    if (valueCount === 1) {
+      results[j] = columnValues[0]
+      continue
+    }
+
+    const fractionalIndex = (valueCount - 1) * p
+    const lowerIndex = Math.floor(fractionalIndex)
+    const upperIndex = Math.ceil(fractionalIndex)
+
+    if (lowerIndex === upperIndex) {
+      results[j] = columnValues[lowerIndex]
+    } else {
+      const weight = fractionalIndex - lowerIndex
+      results[j] =
+        columnValues[lowerIndex] +
+        (columnValues[upperIndex] - columnValues[lowerIndex]) * weight
+    }
+  }
+
+  return results
+}
+
+export const nf = new Intl.NumberFormat("en-US", { maximumFractionDigits: 2 })

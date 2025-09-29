@@ -1,7 +1,7 @@
-import { useCallback, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { useMatrix } from "../hooks/useMatrix"
 import type { Cell } from "../types/matrix"
-import { nearestCellIds } from "../utils/utils"
+import { colPercentile, nearestCellIds, nf } from "../utils/utils"
 import Row from "./RowItem"
 
 const Table = () => {
@@ -9,6 +9,8 @@ const Table = () => {
   const { nearestAmount, matrix } = state
 
   const [highlighted, setHighlighted] = useState<Set<number>>(new Set())
+
+  const percentileResults = useMemo(() => colPercentile(matrix, 60), [matrix])
 
   const handleHighlight = useCallback(
     (cell: Cell) => {
@@ -39,6 +41,32 @@ const Table = () => {
           />
         ))}
       </tbody>
+
+      <tfoot>
+        <tr>
+          <td
+            style={{
+              padding: ".5rem",
+              textAlign: "right",
+              fontStyle: "italic",
+            }}
+          >
+            60th percentile
+          </td>
+          {percentileResults.map((val, i) => (
+            <td
+              key={`p60-${i}`}
+              style={{
+                padding: ".5rem",
+                textAlign: "right",
+              }}
+              title="60th percentile"
+            >
+              {nf.format(val)}
+            </td>
+          ))}
+        </tr>
+      </tfoot>
     </table>
   )
 }
