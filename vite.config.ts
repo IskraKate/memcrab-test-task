@@ -10,5 +10,5 @@ export default defineConfig({
       },
     }),
   ],
-  base: "/memcrab-test-task",
+  base: "/memcrab-test-task/",
 })
