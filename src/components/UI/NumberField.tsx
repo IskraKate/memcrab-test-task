@@ -38,8 +38,15 @@ const NumberField = ({
         max={max}
         step={step}
         onChange={(e) => {
-          const v = e.currentTarget.valueAsNumber
-          if (!Number.isNaN(v)) onChange(v)
+          const raw = e.currentTarget.value
+          const asNumber = Number(raw)
+
+          if (!Number.isNaN(asNumber)) {
+            e.currentTarget.value = String(asNumber)
+            onChange(asNumber)
+          } else {
+            onChange(0)
+          }
         }}
         aria-describedby={helpId}
         {...props}

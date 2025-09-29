@@ -1,12 +1,11 @@
 import { useReducer } from "react"
-import type { MatrixAction, MatrixState } from "../types/matrix"
+import type { MatrixAction, MatrixState, Row } from "../types/matrix"
 import { MatrixContext } from "./MatrixContext"
 import {
   calcMaxNearestAmount,
   clamp,
-  countCells,
-  createMatrix,
   createRow,
+  rebuildMatrixState,
 } from "../utils/utils"
 
 function matrixReducer(state: MatrixState, action: MatrixAction): MatrixState {
@@ -14,35 +13,15 @@ function matrixReducer(state: MatrixState, action: MatrixAction): MatrixState {
     case "SET_ROWS": {
       const rows = clamp(action.rows, 0, 100)
       const columns = state.columns
-
-      const newMatrix = createMatrix(rows, columns)
-      const maxNearestAmount = calcMaxNearestAmount(rows, columns)
-
-      return {
-        ...state,
-        rows,
-        matrix: newMatrix,
-        nearestAmount: clamp(state.nearestAmount, 0, maxNearestAmount),
-        nextRowId: rows + 1,
-        nextCellId: countCells(newMatrix) + 1,
-      }
+      const rebuilt = rebuildMatrixState(rows, columns, state.nearestAmount)
+      return { ...state, rows, ...rebuilt }
     }
 
     case "SET_COLUMNS": {
       const columns = clamp(action.columns, 0, 100)
       const rows = state.rows
-
-      const newMatrix = createMatrix(rows, columns)
-      const maxNearestAmount = calcMaxNearestAmount(rows, columns)
-
-      return {
-        ...state,
-        columns,
-        matrix: newMatrix,
-        nearestAmount: clamp(state.nearestAmount, 0, maxNearestAmount),
-        nextRowId: rows + 1,
-        nextCellId: countCells(newMatrix) + 1,
-      }
+      const rebuilt = rebuildMatrixState(rows, columns, state.nearestAmount)
+      return { ...state, columns, ...rebuilt }
     }
 
     case "SET_NEAREST_AMOUNT": {
@@ -55,6 +34,7 @@ function matrixReducer(state: MatrixState, action: MatrixAction): MatrixState {
     }
 
     case "ADD_ROW": {
+      if (state.columns === 0) return state
       const { row, nextCellId } = createRow(
         state.columns,
         state.nextRowId,
@@ -77,6 +57,9 @@ function matrixReducer(state: MatrixState, action: MatrixAction): MatrixState {
     case "DELETE_ROW": {
       const rowId = action.id
       const newMatrix = state.matrix.filter((r) => r.rowId !== rowId)
+
+      if (newMatrix.length === state.matrix.length) return state
+
       const rows = newMatrix.length
       const maxNearestAmount = calcMaxNearestAmount(rows, state.columns)
 
@@ -94,13 +77,13 @@ function matrixReducer(state: MatrixState, action: MatrixAction): MatrixState {
       return {
         ...state,
         matrix: state.matrix.map((row) => {
-          const cellIndex = row.cells.findIndex((c) => c.id === id)
-          if (cellIndex === -1) return row
+          const idx = row.cells.findIndex((cell) => cell.id === id)
+          if (idx === -1) return row
 
           return {
             ...row,
             cells: row.cells.map((cell, index) =>
-              index === cellIndex ? { ...cell, amount: cell.amount + 1 } : cell
+              index === idx ? { ...cell, amount: cell.amount + 1 } : cell
             ),
           }
         }),
@@ -112,15 +95,26 @@ function matrixReducer(state: MatrixState, action: MatrixAction): MatrixState {
   }
 }
 
-export function MatrixProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(matrixReducer, {
-    rows: 0,
-    columns: 0,
+function initMatrixState(): MatrixState {
+  const rows = 0
+  const columns = 0
+  const matrix: Row[] = []
+  return {
+    rows,
+    columns,
     nearestAmount: 0,
-    matrix: [],
-    nextRowId: 0,
-    nextCellId: 0,
-  })
+    matrix,
+    nextRowId: rows + 1,
+    nextCellId: 1,
+  }
+}
+
+export function MatrixProvider({ children }: { children: React.ReactNode }) {
+  const [state, dispatch] = useReducer(
+    matrixReducer,
+    undefined,
+    initMatrixState
+  )
 
   const setRows = (rows: number) => dispatch({ type: "SET_ROWS", rows })
   const setColumns = (columns: number) =>

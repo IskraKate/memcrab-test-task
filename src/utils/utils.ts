@@ -1,8 +1,31 @@
 import type { Row, Cell, Distance } from "../types/matrix"
 
-export const randomAmount = () => Math.floor(Math.random() * 900) + 100
-export const countCells = (matrix: Row[]) =>
-  matrix.reduce((sum, row) => sum + row.cells.length, 0)
+export function rebuildMatrixState(
+  rows: number,
+  columns: number,
+  prevNearestAmount: number
+) {
+  if (rows === 0 || columns === 0) {
+    return {
+      matrix: [] as Row[],
+      nextRowId: rows + 1,
+      nextCellId: 1,
+      nearestAmount: 0,
+    }
+  }
+
+  const matrix = createMatrix(rows, columns)
+  const nextRowId = rows + 1
+  const nextCellId = countCells(matrix) + 1
+  const maxX = calcMaxNearestAmount(rows, columns)
+
+  return {
+    matrix,
+    nextRowId,
+    nextCellId,
+    nearestAmount: clamp(prevNearestAmount, 0, maxX),
+  }
+}
 
 export function createMatrix(rows: number, columns: number): Row[] {
   let idCounter = 1
@@ -34,6 +57,11 @@ export function createRow(
   }))
   return { row: { rowId, cells }, nextCellId: id }
 }
+
+export const randomAmount = () => Math.floor(Math.random() * 900) + 100
+
+export const countCells = (matrix: Row[]) =>
+  matrix.reduce((sum, row) => sum + row.cells.length, 0)
 
 export const clamp = (val: number, min: number, max: number) =>
   Math.min(Math.max(val, min), max)
